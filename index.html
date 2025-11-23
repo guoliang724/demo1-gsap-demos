@@ -1,13 +1,196 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>demo1-gasp-demos</title>
+    <title>demo1-gsap-demos</title>
+    <style>
+      .red {
+        background-color: red;
+        width: 100px;
+        height: 100px;
+      }
+
+      .green {
+        background-color: green;
+        width: 100px;
+        height: 100px;
+      }
+
+      .blue {
+        background-color: blue;
+        width: 100px;
+        height: 100px;
+      }
+
+      .box {
+        border-radius: 50%;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .btnList {
+        margin-top: 20px;
+      }
+
+      .hooks-list {
+        display: flex;
+        gap: 80px;
+      }
+    </style>
   </head>
   <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
+    <div id="app" class="container">
+      <div class="box red">Red</div>
+      <div class="box green">green</div>
+      <div class="box blue">blue</div>
+      <div>
+        Hooks:
+        <ul class="hooks-list">
+          <li>Onstart: <span class="onstart"></span></li>
+          <li>OnComplete: <span class="onended"></span></li>
+          <li>Property x: <span class="propertyx"></span></li>
+        </ul>
+      </div>
+      <div class="btnList">
+        <button class="btnRed">move as a single red box</button>
+        <button class="btnArray">move as an array</button>
+        <button class="btnAsClass">move as an class</button>
+        <button class="btnUtli">Utli:toArray</button>
+        <button class="btnReset">Rest</button>
+      </div>
+      <div class="btnList">
+        <button class="btntimeline">move as a time-line</button>
+        <button class="btn">timeline</button>
+        <button class="btnReset">Rest</button>
+      </div>
+    </div>
+    <script type="module">
+      import { gsap } from "gsap";
+
+      const btnRed = document.querySelector(".btnRed");
+      const btnArray = document.querySelector(".btnArray");
+      const btnClass = document.querySelector(".btnAsClass");
+      const btnUtli = document.querySelector(".btnUtli");
+      const btnReset = document.querySelector(".btnReset");
+      const btnTimeLine = document.querySelector(".btntimeline");
+      const onStartSpan = document.querySelector(".onstart");
+      const onCompleteSpan = document.querySelector(".onended");
+
+      const propertyx = document.querySelector(".propertyx");
+
+      const mm = gsap.matchMedia();
+
+      let onStart = false;
+      // move as a single
+      btnRed.onclick = function () {
+        gsap.to(".red", {
+          x: 500,
+          duration: 1,
+          onStart() {
+            onStartSpan.innerHTML = true;
+            onCompleteSpan.innerHTML = false;
+          },
+          onComplete(msg) {
+            onStartSpan.innerHTML = false;
+            onCompleteSpan.innerHTML = msg;
+          },
+          onCompleteParams: ["done 🎉"],
+          onUpdate() {
+            const x = gsap.getProperty(this.targets()[0], "x");
+            propertyx.innerHTML = x;
+          },
+        });
+
+        // responsive
+        mm.add("(width >= 800px)", () => {
+          gsap.to(".red", () => {
+            x: 500;
+          });
+        });
+      };
+
+      // move as a list
+      btnArray.onclick = function () {
+        gsap.to(".box", {
+          x: 500,
+          duration: 1,
+          stagger: 1,
+        });
+      };
+
+      // move as a class
+      btnClass.onclick = function () {
+        gsap.to(".box", {
+          x: 500,
+          stagger: 1,
+          duration: 1,
+        });
+      };
+
+      // utlis
+      btnUtli.onclick = function () {
+        const boxs = gsap.utils.toArray(".box");
+        boxs.forEach((elem, index) => {
+          gsap.to(elem, {
+            x: 200 * (index + 1),
+            duration: 2,
+          });
+        });
+      };
+
+      // ease options
+      const red = document.querySelector(".red");
+
+      red.onmouseover = function () {
+        gsap.to(this, {
+          width: 300,
+        });
+      };
+
+      red.onmouseout = function () {
+        gsap.to(this, {
+          width: 100,
+        });
+      };
+
+      // move as a time line
+      btnTimeLine.onclick = function () {
+        const t1 = gsap.timeline();
+
+        t1.to(".red", {
+          x: 500,
+          duration: 1,
+        });
+
+        t1.to(".green", {
+          x: 500,
+          duration: 1,
+        });
+
+        t1.to(".blue", {
+          x: 500,
+          duration: 1,
+        });
+      };
+
+      // clean up
+      btnReset.onclick = function () {
+        gsap.killTweensOf(".box");
+
+        gsap.to(".box", {
+          x: 0,
+        });
+
+        onStartSpan.innerHTML = null;
+        onCompleteSpan.innerHTML = null;
+        propertyx.innerHTML = null;
+      };
+    </script>
   </body>
 </html>
