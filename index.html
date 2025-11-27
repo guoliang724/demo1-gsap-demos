@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>demo1-gsap-demos</title>
     <style>
+      body {
+        height: 2000px;
+      }
+
       .red {
         background-color: red;
         width: 100px;
@@ -42,36 +46,85 @@
         display: flex;
         gap: 80px;
       }
+
+      .divider {
+        width: 80%;
+        height: 1px;
+        border-top: 1px solid black;
+      }
+
+      .part1,
+      .part2 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      .box1 {
+        width: 100px;
+        height: 100px;
+        margin-top: 200px;
+        margin-bottom: 10px;
+        color: white;
+      }
+      .boxred {
+        background-color: red;
+        border-radius: 5px;
+      }
+      .boxgreen {
+        background-color: green;
+         border-radius: 5px;
+      }
+      .boxblue{
+       background-color: blue;
+         border-radius: 5px;
+      }
     </style>
   </head>
   <body>
     <div id="app" class="container">
-      <div class="box red">Red</div>
-      <div class="box green">green</div>
-      <div class="box blue">blue</div>
-      <div>
-        Hooks:
-        <ul class="hooks-list">
-          <li>Onstart: <span class="onstart"></span></li>
-          <li>OnComplete: <span class="onended"></span></li>
-          <li>Property x: <span class="propertyx"></span></li>
-        </ul>
+      <div class="part1">
+        <div class="box red">Red</div>
+        <div class="box green">green</div>
+        <div class="box blue">blue</div>
+        <div>
+          Hooks:
+          <ul class="hooks-list">
+            <li>Onstart: <span class="onstart"></span></li>
+            <li>OnComplete: <span class="onended"></span></li>
+            <li>Property x: <span class="propertyx"></span></li>
+          </ul>
+        </div>
+        <div class="btnList">
+          <button class="btnRed">move as a single red box</button>
+          <button class="btnArray">move as an array</button>
+          <button class="btnAsClass">move as an class</button>
+          <button class="btnUtli">Utli:toArray</button>
+          <button class="btnReset">Rest</button>
+        </div>
+        <div class="btnList">
+          <button class="btntimeline">move as a time-line</button>
+        </div>
       </div>
-      <div class="btnList">
-        <button class="btnRed">move as a single red box</button>
-        <button class="btnArray">move as an array</button>
-        <button class="btnAsClass">move as an class</button>
-        <button class="btnUtli">Utli:toArray</button>
-        <button class="btnReset">Rest</button>
-      </div>
-      <div class="btnList">
-        <button class="btntimeline">move as a time-line</button>
+      <div class="divider"></div>
+      <di class="part2">
+        <!-- using GSDevTools -->
+         <div class="box1 boxred">red</div>
+         <div class="box1 boxgreen">greed</div>
+         <div class="box1 boxblue">blue</div>
+         <div></div>
+         <div></div>  
         <button class="btn">timeline</button>
         <button class="btnReset">Rest</button>
       </div>
     </div>
     <script type="module">
       import { gsap } from "gsap";
+      import { GSDevTools } from "gsap/GSDevTools";
+      import {ScrollTrigger} from "gsap/ScrollTrigger"
+
+      // register plugins
+      // gsap.registerPlugin(GSDevTools);
+      gsap.registerPlugin(ScrollTrigger);
 
       const btnRed = document.querySelector(".btnRed");
       const btnArray = document.querySelector(".btnArray");
@@ -87,6 +140,7 @@
       const mm = gsap.matchMedia();
 
       let onStart = false;
+
       // move as a single
       btnRed.onclick = function () {
         gsap.to(".red", {
@@ -166,16 +220,19 @@
         t1.to(".red", {
           x: 500,
           duration: 1,
+          id: "red",
         });
 
         t1.to(".green", {
           x: 500,
           duration: 1,
+          id: "green",
         });
 
         t1.to(".blue", {
           x: 500,
           duration: 1,
+          id: "blue",
         });
       };
 
@@ -191,6 +248,78 @@
         onCompleteSpan.innerHTML = null;
         propertyx.innerHTML = null;
       };
+
+      // GSDevTools.create();
+
+      const boxred = document.querySelector('boxred');
+      const boxgreen = document.querySelector('boxgreen');
+      const boxblue = document.querySelector('boxblue');
+
+    // gsap.to('.boxred',{
+    //   x:500,
+    //   duration:2,
+    //   scrollTrigger:'.red',
+    //   id:'red'
+    // })
+
+    // single
+    // gsap.to('.boxgreen',{
+    //   x:500,
+    //   duration:2,
+    //   scrollTrigger:'.boxgreen',
+    //   id:'green'
+    // })
+
+    //  gsap.to('.boxblue',{
+    //   x:500,
+    //   duration:2,
+    //   scrollTrigger:'.boxblue',
+    //   id:'blue'
+    // })
+
+    // as whole
+    // const boxs = gsap.utils.toArray('.box1');
+    // boxs.forEach(element=>{
+    //   gsap.to(element,{
+    //      x:500,
+    //    duration:2,
+    //    scrollTrigger:element,
+    //   })
+    // })
+
+    // as timeline 
+    // const t3 = gsap.timeline({
+    //   scrollTrigger:'.boxgreen'
+    // })
+
+    // t3.to(
+    //   '.boxgreen',
+    //   {
+    //     x:500,
+    //     duration:2
+    //   }
+    // )
+
+
+      gsap.to('.boxgreen',{
+      x:800,
+      duration:10,
+      scrollTrigger:{
+        trigger:'.boxgreen',
+        // start:100   // the distance from scrollbar to the top 
+        start:'top center', // the target top and the viewport top collide,
+        markers:true,  // bench mark display
+        // toggleActions:'play pause resume none'       // trigger actions
+        // first parameter: start to enter
+        // second parameter: start to leave
+        // third parameter: re-enter from end
+        // fourth parameter: re-leave from start
+        scrub:1,  // 跟滚动条正向反向，数值代表惯性
+        pin:true // 固定位置
+      },
+    })
+      
     </script>
   </body>
 </html>
+
