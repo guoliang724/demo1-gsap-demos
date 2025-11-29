@@ -7,7 +7,11 @@
     <title>demo1-gsap-demos</title>
     <style>
       body {
-        height: 2000px;
+        min-height: 2000px;
+      }
+
+      .app {
+        height: 100%;
       }
 
       .red {
@@ -59,25 +63,46 @@
         margin-bottom: 10px;
       }
 
-      .box1 {
+      .box1, .box2, .box3 {
         width: 100px;
         height: 100px;
-        margin-top: 200px;
+        margin-top: 100px;
         margin-bottom: 10px;
-        color: white;
       }
-      .boxred {
+      .boxred, .red3, .red1 {
         background-color: red;
         border-radius: 5px;
       }
-      .boxgreen {
+      .boxgreen, .green3, .green1{
         background-color: green;
-         border-radius: 5px;
+        border-radius: 5px;
       }
-      .boxblue{
-       background-color: blue;
-         border-radius: 5px;
+      .boxblue, .blue3, .blue1{
+        background-color: blue;
+        border-radius: 5px;
       }
+
+      .part3 {
+        display: flex;
+        justify-content: center;
+        margin-top: 100px;
+      }
+      .box2, .box3 {
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+        margin-right: 40px;
+        margin-top: 40px;
+        border-radius: 5%;
+      }
+
+   
+      .flip {
+        margin-top: 50px;
+      }
+
+   
+     
     </style>
   </head>
   <body>
@@ -106,25 +131,45 @@
         </div>
       </div>
       <div class="divider"></div>
-      <di class="part2">
+      <div class="part2">
         <!-- using GSDevTools -->
-         <div class="box1 boxred">red</div>
-         <div class="box1 boxgreen">greed</div>
-         <div class="box1 boxblue">blue</div>
-         <div></div>
-         <div></div>  
+        <div class="box1 boxred">red</div>
+        <div class="box1 boxgreen">greed</div>
+        <div class="box1 boxblue">blue</div>
+        <div></div>
+        <div></div>
         <button class="btn">timeline</button>
         <button class="btnReset">Rest</button>
       </div>
+      <div class="divider"></div>
+
+      <div class="part3">
+        <div class="box2 red1" data-speed="0.5">red</div>
+        <div class="box2 green1" data-speed="1.5">greed</div>
+        <div class="box2 blue1" data-speed="2">blue</div>
+      </div>
+      <div class="divider"></div>
+      <div class="flip">
+        <h2>Flip effects</h2> 
+        <button class="flip-btn">Flip</button>
+        <div class="box3 red3">red</div>
+        <div class="box3 green3">greed</div>
+        <div class="box3 blue3">blue</div>
+   
     </div>
+
     <script type="module">
       import { gsap } from "gsap";
       import { GSDevTools } from "gsap/GSDevTools";
-      import {ScrollTrigger} from "gsap/ScrollTrigger"
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+      import { ScrollSmoother } from "gsap/ScrollSmoother";
+      import {Flip} from "gsap/Flip"
 
       // register plugins
       // gsap.registerPlugin(GSDevTools);
-      gsap.registerPlugin(ScrollTrigger);
+      gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+
+      gsap.registerPlugin(Flip)
 
       const btnRed = document.querySelector(".btnRed");
       const btnArray = document.querySelector(".btnArray");
@@ -134,6 +179,9 @@
       const btnTimeLine = document.querySelector(".btntimeline");
       const onStartSpan = document.querySelector(".onstart");
       const onCompleteSpan = document.querySelector(".onended");
+      const flipBtn = document.querySelector('.flip-btn')
+      const flipRed = document.querySelector('.red3');
+      const flipGreen = document.querySelector('.green3');
 
       const propertyx = document.querySelector(".propertyx");
 
@@ -251,75 +299,106 @@
 
       // GSDevTools.create();
 
-      const boxred = document.querySelector('boxred');
-      const boxgreen = document.querySelector('boxgreen');
-      const boxblue = document.querySelector('boxblue');
+      const boxred = document.querySelector("boxred");
+      const boxgreen = document.querySelector("boxgreen");
+      const boxblue = document.querySelector("boxblue");
 
-    // gsap.to('.boxred',{
-    //   x:500,
-    //   duration:2,
-    //   scrollTrigger:'.red',
-    //   id:'red'
-    // })
+      // gsap.to('.boxred',{
+      //   x:500,
+      //   duration:2,
+      //   scrollTrigger:'.red',
+      //   id:'red'
+      // })
 
-    // single
-    // gsap.to('.boxgreen',{
-    //   x:500,
-    //   duration:2,
-    //   scrollTrigger:'.boxgreen',
-    //   id:'green'
-    // })
+      // single
+      // gsap.to('.boxgreen',{
+      //   x:500,
+      //   duration:2,
+      //   scrollTrigger:'.boxgreen',
+      //   id:'green'
+      // })
 
-    //  gsap.to('.boxblue',{
-    //   x:500,
-    //   duration:2,
-    //   scrollTrigger:'.boxblue',
-    //   id:'blue'
-    // })
+      //  gsap.to('.boxblue',{
+      //   x:500,
+      //   duration:2,
+      //   scrollTrigger:'.boxblue',
+      //   id:'blue'
+      // })
 
-    // as whole
-    // const boxs = gsap.utils.toArray('.box1');
-    // boxs.forEach(element=>{
-    //   gsap.to(element,{
-    //      x:500,
-    //    duration:2,
-    //    scrollTrigger:element,
-    //   })
-    // })
+      // as whole
+      // const boxs = gsap.utils.toArray('.box1');
+      // boxs.forEach(element=>{
+      //   gsap.to(element,{
+      //      x:500,
+      //    duration:2,
+      //    scrollTrigger:element,
+      //   })
+      // })
 
-    // as timeline 
-    // const t3 = gsap.timeline({
-    //   scrollTrigger:'.boxgreen'
-    // })
+      // as timeline
+      // const t3 = gsap.timeline({
+      //   scrollTrigger:'.boxgreen'
+      // })
 
-    // t3.to(
-    //   '.boxgreen',
-    //   {
-    //     x:500,
-    //     duration:2
-    //   }
-    // )
+      // t3.to(
+      //   '.boxgreen',
+      //   {
+      //     x:500,
+      //     duration:2
+      //   }
+      // )
+
+      // gsap.to(".boxgreen", {
+      //   x: 800,
+      //   duration: 12,
+      //   scrollTrigger: {
+      //     trigger: ".boxgreen",
+      //     // start:100   // the distance from scrollbar to the top
+      //     // start: "top center", // the target top and the viewport top collide,
+      //     // markers: true, // bench mark display
+      //     // toggleActions:'play pause resume none'       // trigger actions
+      //     // first parameter: start to enter
+      //     // second parameter: start to leave
+      //     // third parameter: re-enter from end
+      //     // fourth parameter: re-leave from start
+      //     // scrub: 1, // 跟滚动条正向反向，数值代表惯性
+      //     // pin:true // 固定位置
+      //   },
+      // });
+
+      // scroll
+      const smoother = ScrollSmoother.create({
+        smooth: 3,
+        effects: true,
+      });
+
+      smoother.effects(".box2", {
+        lag: (i) => (i + 1) / 2,
+        speed: (i) => (i + 1) / 2,
+      });
+
+      // btn.onclick = function () {
+      //   // smoother.scrollTo(".green", true, 200);
+      //   smoother.scrollTo(".green", true, "center center");
+      // };
+
+      // flip其实就是dom转换解构后的动画
+      flipBtn.onclick = function(){
+        // 1. 存储一下状态
+        const state = Flip.getState([flipRed,flipGreen])
+        
+        // 2. 动作结束
+        flipRed.before(flipGreen)
+        
+        // 3. 加动画
+        Flip.from(state,{
+          duration:2,
+          yoyo:true,
+          repeat:-1
+        })
+      }
 
 
-      gsap.to('.boxgreen',{
-      x:800,
-      duration:10,
-      scrollTrigger:{
-        trigger:'.boxgreen',
-        // start:100   // the distance from scrollbar to the top 
-        start:'top center', // the target top and the viewport top collide,
-        markers:true,  // bench mark display
-        // toggleActions:'play pause resume none'       // trigger actions
-        // first parameter: start to enter
-        // second parameter: start to leave
-        // third parameter: re-enter from end
-        // fourth parameter: re-leave from start
-        scrub:1,  // 跟滚动条正向反向，数值代表惯性
-        pin:true // 固定位置
-      },
-    })
-      
     </script>
   </body>
 </html>
-
