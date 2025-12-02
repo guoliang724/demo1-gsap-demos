@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>demo1-gsap-demos</title>
+    <style>
+      body {
+        min-height: 2000px;
+      }
+
+      .app {
+        height: 100%;
+      }
+
+      .red {
+        background-color: red;
+        width: 100px;
+        height: 100px;
+      }
+
+      .green {
+        background-color: green;
+        width: 100px;
+        height: 100px;
+      }
+
+      .blue {
+        background-color: blue;
+        width: 100px;
+        height: 100px;
+      }
+
+      .box {
+        border-radius: 50%;
+      }
+
+      .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .btnList {
+        margin-top: 20px;
+      }
+
+      .hooks-list {
+        display: flex;
+        gap: 80px;
+      }
+
+      .divider {
+        width: 80%;
+        height: 1px;
+        border-top: 1px solid black;
+      }
+
+      .part1,
+      .part2 {
+        margin-top: 10px;
+        margin-bottom: 10px;
+      }
+
+      .box1, .box2, .box3 {
+        width: 100px;
+        height: 100px;
+        margin-top: 100px;
+        margin-bottom: 10px;
+      }
+      .boxred, .red3, .red1 {
+        background-color: red;
+        border-radius: 5px;
+      }
+      .boxgreen, .green3, .green1{
+        background-color: green;
+        border-radius: 5px;
+      }
+      .boxblue, .blue3, .blue1{
+        background-color: blue;
+        border-radius: 5px;
+      }
+
+      .part3 {
+        display: flex;
+        justify-content: center;
+        margin-top: 100px;
+      }
+      .box2, .box3 {
+        width: 100px;
+        height: 100px;
+        border: 1px solid black;
+        margin-right: 40px;
+        margin-top: 40px;
+        border-radius: 5%;
+      }
+
+   
+      .flip {
+        margin-top: 50px;
+      }
+
+   
+     
+    </style>
+  </head>
+  <body>
+    <div id="app" class="container">
+      <div class="part1">
+        <div class="box red">Red</div>
+        <div class="box green">green</div>
+        <div class="box blue">blue</div>
+        <div>
+          Hooks:
+          <ul class="hooks-list">
+            <li>Onstart: <span class="onstart"></span></li>
+            <li>OnComplete: <span class="onended"></span></li>
+            <li>Property x: <span class="propertyx"></span></li>
+          </ul>
+        </div>
+        <div class="btnList">
+          <button class="btnRed">move as a single red box</button>
+          <button class="btnArray">move as an array</button>
+          <button class="btnAsClass">move as an class</button>
+          <button class="btnUtli">Utli:toArray</button>
+          <button class="btnReset">Rest</button>
+        </div>
+        <div class="btnList">
+          <button class="btntimeline">move as a time-line</button>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="part2">
+        <!-- using GSDevTools -->
+        <div class="box1 boxred">red</div>
+        <div class="box1 boxgreen">greed</div>
+        <div class="box1 boxblue">blue</div>
+        <div></div>
+        <div></div>
+        <button class="btn">timeline</button>
+        <button class="btnReset">Rest</button>
+      </div>
+      <div class="divider"></div>
+
+      <div class="part3">
+        <div class="box2 red1" data-speed="0.5">red</div>
+        <div class="box2 green1" data-speed="1.5">greed</div>
+        <div class="box2 blue1" data-speed="2">blue</div>
+      </div>
+      <div class="divider"></div>
+      <div class="flip">
+        <h2>Flip effects</h2> 
+        <button class="flip-btn">Flip</button>
+        <div class="box3 red3">red</div>
+        <div class="box3 green3">greed</div>
+        <div class="box3 blue3">blue</div>
+   
+    </div>
+
+    <script type="module">
+      import { gsap } from "gsap";
+      import { GSDevTools } from "gsap/GSDevTools";
+      import { ScrollTrigger } from "gsap/ScrollTrigger";
+      import { ScrollSmoother } from "gsap/ScrollSmoother";
+      import {Flip} from "gsap/Flip"
+
+      // register plugins
+      // gsap.registerPlugin(GSDevTools);
+      gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+
+      gsap.registerPlugin(Flip)
+
+      const btnRed = document.querySelector(".btnRed");
+      const btnArray = document.querySelector(".btnArray");
+      const btnClass = document.querySelector(".btnAsClass");
+      const btnUtli = document.querySelector(".btnUtli");
+      const btnReset = document.querySelector(".btnReset");
+      const btnTimeLine = document.querySelector(".btntimeline");
+      const onStartSpan = document.querySelector(".onstart");
+      const onCompleteSpan = document.querySelector(".onended");
+      const flipBtn = document.querySelector('.flip-btn')
+      const flipRed = document.querySelector('.red3');
+      const flipGreen = document.querySelector('.green3');
+
+      const propertyx = document.querySelector(".propertyx");
+
+      const mm = gsap.matchMedia();
+
+      let onStart = false;
+
+      // move as a single
+      btnRed.onclick = function () {
+        gsap.to(".red", {
+          x: 500,
+          duration: 1,
+          onStart() {
+            onStartSpan.innerHTML = true;
+            onCompleteSpan.innerHTML = false;
+          },
+          onComplete(msg) {
+            onStartSpan.innerHTML = false;
+            onCompleteSpan.innerHTML = msg;
+          },
+          onCompleteParams: ["done 🎉"],
+          onUpdate() {
+            const x = gsap.getProperty(this.targets()[0], "x");
+            propertyx.innerHTML = x;
+          },
+        });
+
+        // responsive
+        mm.add("(width >= 800px)", () => {
+          gsap.to(".red", () => {
+            x: 500;
+          });
+        });
+      };
+
+      // move as a list
+      btnArray.onclick = function () {
+        gsap.to(".box", {
+          x: 500,
+          duration: 1,
+          stagger: 1,
+        });
+      };
+
+      // move as a class
+      btnClass.onclick = function () {
+        gsap.to(".box", {
+          x: 500,
+          stagger: 1,
+          duration: 1,
+        });
+      };
+
+      // utlis
+      btnUtli.onclick = function () {
+        const boxs = gsap.utils.toArray(".box");
+        boxs.forEach((elem, index) => {
+          gsap.to(elem, {
+            x: 200 * (index + 1),
+            duration: 2,
+          });
+        });
+      };
+
+      // ease options
+      const red = document.querySelector(".red");
+
+      red.onmouseover = function () {
+        gsap.to(this, {
+          width: 300,
+        });
+      };
+
+      red.onmouseout = function () {
+        gsap.to(this, {
+          width: 100,
+        });
+      };
+
+      // move as a time line
+      btnTimeLine.onclick = function () {
+        const t1 = gsap.timeline();
+
+        t1.to(".red", {
+          x: 500,
+          duration: 1,
+          id: "red",
+        });
+
+        t1.to(".green", {
+          x: 500,
+          duration: 1,
+          id: "green",
+        });
+
+        t1.to(".blue", {
+          x: 500,
+          duration: 1,
+          id: "blue",
+        });
+      };
+
+      // clean up
+      btnReset.onclick = function () {
+        gsap.killTweensOf(".box");
+
+        gsap.to(".box", {
+          x: 0,
+        });
+
+        onStartSpan.innerHTML = null;
+        onCompleteSpan.innerHTML = null;
+        propertyx.innerHTML = null;
+      };
+
+      // GSDevTools.create();
+
+      const boxred = document.querySelector("boxred");
+      const boxgreen = document.querySelector("boxgreen");
+      const boxblue = document.querySelector("boxblue");
+
+      // gsap.to('.boxred',{
+      //   x:500,
+      //   duration:2,
+      //   scrollTrigger:'.red',
+      //   id:'red'
+      // })
+
+      // single
+      // gsap.to('.boxgreen',{
+      //   x:500,
+      //   duration:2,
+      //   scrollTrigger:'.boxgreen',
+      //   id:'green'
+      // })
+
+      //  gsap.to('.boxblue',{
+      //   x:500,
+      //   duration:2,
+      //   scrollTrigger:'.boxblue',
+      //   id:'blue'
+      // })
+
+      // as whole
+      // const boxs = gsap.utils.toArray('.box1');
+      // boxs.forEach(element=>{
+      //   gsap.to(element,{
+      //      x:500,
+      //    duration:2,
+      //    scrollTrigger:element,
+      //   })
+      // })
+
+      // as timeline
+      // const t3 = gsap.timeline({
+      //   scrollTrigger:'.boxgreen'
+      // })
+
+      // t3.to(
+      //   '.boxgreen',
+      //   {
+      //     x:500,
+      //     duration:2
+      //   }
+      // )
+
+      // gsap.to(".boxgreen", {
+      //   x: 800,
+      //   duration: 12,
+      //   scrollTrigger: {
+      //     trigger: ".boxgreen",
+      //     // start:100   // the distance from scrollbar to the top
+      //     // start: "top center", // the target top and the viewport top collide,
+      //     // markers: true, // bench mark display
+      //     // toggleActions:'play pause resume none'       // trigger actions
+      //     // first parameter: start to enter
+      //     // second parameter: start to leave
+      //     // third parameter: re-enter from end
+      //     // fourth parameter: re-leave from start
+      //     // scrub: 1, // 跟滚动条正向反向，数值代表惯性
+      //     // pin:true // 固定位置
+      //   },
+      // });
+
+      // scroll
+      const smoother = ScrollSmoother.create({
+        smooth: 3,
+        effects: true,
+      });
+
+      smoother.effects(".box2", {
+        lag: (i) => (i + 1) / 2,
+        speed: (i) => (i + 1) / 2,
+      });
+
+      // btn.onclick = function () {
+      //   // smoother.scrollTo(".green", true, 200);
+      //   smoother.scrollTo(".green", true, "center center");
+      // };
+
+      // flip其实就是dom转换解构后的动画
+      flipBtn.onclick = function(){
+        // 1. 存储一下状态
+        const state = Flip.getState([flipRed,flipGreen])
+        
+        // 2. 动作结束
+        flipRed.before(flipGreen)
+        
+        // 3. 加动画
+        Flip.from(state,{
+          duration:2,
+          yoyo:true,
+          repeat:-1
+        })
+      }
+
+
+    </script>
+  </body>
+</html>
