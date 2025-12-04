@@ -4,46 +4,84 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      .red {
+        width: 100px;
+        height: 100px;
+        background: red;
+      }
+    </style>
   </head>
   <body>
     <div id="'app">
-      <h2>Text</h2>
-      <button class="textBtn">click</button>
-      <div class="text">this is an init text</div>
+      <h2>Observer Listener</h2>
+      <div class="red"></div>
     </div>
     <script type="module">
       import { gsap } from "gsap";
-      import { TextPlugin } from "gsap/textPlugin";
-      import { SplitText } from "gsap/SplitText";
+      import { Observer } from "gsap/Observer";
 
-      // gsap.registerPlugin(TextPlugin);
-      gsap.registerPlugin(SplitText);
+      gsap.registerPlugin(Observer);
 
-      const btn = document.querySelector(".textBtn");
+      // default: window
+      // Observer.create({
+      //   type: "wheel",
+      //   onDown() {
+      //     console.log("down");
+      //   },
+      //   onUp() {
+      //     console.log("up");
+      //   },
+      // });
 
-      btn.onclick = function () {
-        // gsap.to(".text", {
-        //   duration: 2,
-        //   // text: "Thanks for waiting",
-        //   text: {
-        //     value: "Thanks for waiting",
-        //     // delimiter: " ",
-        //     newClass: ".red",
-        //     oldClass: ".green",
-        //     padSpace: "true",
-        //   },
-        // });
+      // add target
+      // Observer.create({
+      //   target: ".red",
+      //   type: "wheel",
+      //   onDown() {
+      //     console.log("down");
+      //   },
+      //   onUp() {
+      //     console.log("up");
+      //   },
+      // });
 
-        // chars,words,lines,
-        const split = SplitText.create(".text", { type: "chars" });
+      // Observer.create({
+      //   target: ".red",
+      //   type: "pointer",   // wheel pointer touch scroll
+      //   onDown() {
+      //     console.log("down");
+      //   },
+      //   onUp() {
+      //     console.log("up");
+      //   },
+      //   onLeft() {
+      //     console.log("onLeft");
+      //   },
+      //   onRight() {
+      //     console.log("onRight");
+      //   },
+      //   lockAxis: true,
+      // });
 
-        gsap.from(split.chars, {
-          duration: 1,
-          y: -50,
-          stagger: 0.1,
-          opacity: 0.1,
-        });
-      };
+      Observer.create({
+        target: ".red",
+        type: "wheel",
+        onDown() {
+          gsap.to(".red", {
+            width: "+=50",
+            height: "+=50",
+            duration: 1,
+          });
+        },
+        onUp() {
+          gsap.to(".red", {
+            width: gsap.getProperty(".red", "width") < 100 ? 50 : "-=50",
+            height: gsap.getProperty(".red", "height") < 100 ? 50 : "-=50",
+            duration: 1,
+          });
+        },
+      });
     </script>
   </body>
 </html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="'app">
+      <h2>Text</h2>
+      <button class="textBtn">click</button>
+      <div class="text">this is an init text</div>
+    </div>
+    <script type="module">
+      import { gsap } from "gsap";
+      import { TextPlugin } from "gsap/textPlugin";
+      import { SplitText } from "gsap/SplitText";
+
+      // gsap.registerPlugin(TextPlugin);
+      gsap.registerPlugin(SplitText);
+
+      const btn = document.querySelector(".textBtn");
+
+      btn.onclick = function () {
+        // gsap.to(".text", {
+        //   duration: 2,
+        //   // text: "Thanks for waiting",
+        //   text: {
+        //     value: "Thanks for waiting",
+        //     // delimiter: " ",
+        //     newClass: ".red",
+        //     oldClass: ".green",
+        //     padSpace: "true",
+        //   },
+        // });
+
+        // chars,words,lines,
+        const split = SplitText.create(".text", { type: "chars" });
+
+        gsap.from(split.chars, {
+          duration: 1,
+          y: -50,
+          stagger: 0.1,
+          opacity: 0.1,
+        });
+      };
+    </script>
+  </body>
+</html>
